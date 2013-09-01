@@ -41,7 +41,11 @@
 
 
 #include <stdint.h>
-#include <WProgram.h>
+#if ARDUINO >= 100
+ #include "Arduino.h"
+#else
+ #include "WProgram.h"
+#endif
 
 
 class IRRanger

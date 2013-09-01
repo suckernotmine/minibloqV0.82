@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This test version contains robot code -->
 <board xmlns="http://board.namespaces.minibloq.org" xmlns:minibloq="http://minibloq.org" MinibloqVersion="0.81.Beta">
     <properties>
 		<manufacturer>Arduino</manufacturer>
@@ -8,16 +9,163 @@
 		<imgMain>main.png</imgMain>
 		<imgThumb>thumb.png</imgThumb>
 		<win_i386_lang>WinAVR/v20090313/bin</win_i386_lang>
-		<win_i386_corePath>Arduino.v0022</win_i386_corePath>
+		<win_i386_corePath>Arduino.v0105</win_i386_corePath>
 		<win_i386_core>mega328.a</win_i386_core>
 		<linux_i386_lang>avrlinux/i386/v4.3.5/bin</linux_i386_lang>
-		<linux_i386_corePath>Arduino.v0022</linux_i386_corePath>
+		<linux_i386_corePath>Arduino.v0105</linux_i386_corePath>
 		<linux_i386_core>mega328.a</linux_i386_core>
 		<linux_amd64_lang>avrlinux/i386/v4.3.5/bin</linux_amd64_lang>
-		<linux_amd64_corePath>Arduino.v0022</linux_amd64_corePath>
+		<linux_amd64_corePath>Arduino.v0105</linux_amd64_corePath>
 		<linux_amd64_core>mega328.a</linux_amd64_core>
     </properties>
+	<build>
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 </s>
+			<s>-I"</s> <s>toolsPath::</s>
+			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>componentPath::</s>
+			<s>" -I"</s><s>outputPath::</s>
+
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/Buzzer/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/DCMotor/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/IRRanger/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/IRRemote/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/Ping/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/ServoRC/v1.0</s>
+			
+			<s>" "</s><s>libsPath::</s><s>/Arduino/DCMotor/v1.0/DCMotor.cpp" -o "</s><s>outputPath::</s><s>/DCMotor.cpp.o"</s>
+		</cmd>
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 </s>
+			<s>-I"</s> <s>toolsPath::</s>
+			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>componentPath::</s>
+			<s>" -I"</s><s>outputPath::</s>
+
+			<s>" "</s><s>libsPath::</s><s>/Arduino/IRRemote/v1.0/IRRemote.cpp" -o "</s><s>outputPath::</s><s>/IRRemote.cpp.o"</s>
+		</cmd>
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 </s>
+			<s>-I"</s> <s>toolsPath::</s>
+			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>componentPath::</s>
+			<s>" -I"</s><s>outputPath::</s>
+
+			<s>" "</s><s>libsPath::</s><s>/Arduino/ServoRC/v1.0/Servo.cpp" -o "</s><s>outputPath::</s><s>/Servo.cpp.o"</s>
+		</cmd>
+						
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 </s>
+			<s>-I"</s> <s>toolsPath::</s>
+			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>componentPath::</s>
+			<s>" -I"</s><s>outputPath::</s>
+			
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/LedStrip/v1.0</s>
+
+			<s>" "</s><s>libsPath::</s><s>/Arduino/LedStrip/v1.0/LedStrip.cpp" -o "</s><s>outputPath::</s><s>/LedStrip.cpp.o"</s>
+		</cmd>
+    	<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 </s>
+			<s>-I"</s> <s>toolsPath::</s>
+			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>componentPath::</s>
+			<s>" -I"</s><s>outputPath::</s>
+			
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/Robot/v1.0</s>
+
+            <s>" "</s><s>libsPath::</s><s>/Arduino/Robot/v1.0/Robot.cpp" -o "</s><s>outputPath::</s><s>/Robot.cpp.o"</s>
+		</cmd>
+		
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 </s>
+			<s>-I"</s> <s>toolsPath::</s>
+			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>componentPath::</s>
+			<s>" -I"</s><s>outputPath::</s>
+
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/Buzzer/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/DCMotor/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/IRRanger/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/IRRemote/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/Ping/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/ServoRC/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/Robot/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/LedStrip/v1.0</s>
+
+			<s>" "</s><s>corePath::</s><s>/minibloq.cpp" -o "</s><s>outputPath::</s><s>/minibloq.cpp.o"</s>
+		</cmd>		
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-gcc -Os -Wl,--gc-sections -mmcu=atmega328p -o</s>
+			<s>"</s> <s>outputPath::</s><s>/main.cpp.elf" "</s>
+
+			<s>outputPath::</s><s>/DCMotor.cpp.o" "</s>
+			<s>outputPath::</s><s>/IRRemote.cpp.o" "</s>
+			<s>outputPath::</s><s>/Servo.cpp.o" "</s>
+			<s>outputPath::</s><s>/Robot.cpp.o" "</s>
+			<s>outputPath::</s><s>/LedStrip.cpp.o" "</s>			
+			
+
+			<s>outputPath::</s><s>/minibloq.cpp.o" "</s>
+			<s>corePath::</s><s>/obj/</s><s>core::</s><s>"</s>
+			<s> -L ./ -lm</s>
+		</cmd>
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 </s>
+			<s>"</s><s>outputPath::</s><s>/main.cpp.elf" "</s>
+			<s>"</s><s>outputPath::</s><s>/main.cpp.epp"</s>
+		</cmd>
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-objcopy -O ihex -R .eeprom </s>
+			<s>"</s> <s>outputPath::</s><s>/main.cpp.elf" "</s>
+			<s>"</s> <s>outputPath::</s><s>/main.cpp.hex"</s>
+		</cmd>
+		<cmd>
+			<s>toolsPath::</s>
+			<s>/avr-size --mcu=atmega328p --format=avr </s>
+			<s>"</s> <s>outputPath::</s><s>/main.cpp.elf"</s>
+		</cmd>
+	</build>
 	<instances>
+		<RED   instanceType="LedStrip"/>
+		<GREEN instanceType="LedStrip"/>
+		<BLUE  instanceType="LedStrip"/>
+		<WHITE instanceType="LedStrip"/>	
+		<GRAY 	instanceType="LedStrip"/>
+		<MAROON instanceType="LedStrip"/>
+		<RED 	instanceType="LedStrip"/>
+		<OLIVE 	instanceType="LedStrip"/>
+		<YELLOW instanceType="LedStrip"/>
+		<GREEN 	instanceType="LedStrip"/>
+		<LIME 	instanceType="LedStrip"/>
+		<TEAL 	instanceType="LedStrip"/>
+		<AQUA 	instanceType="LedStrip"/>
+		<NAVY 	instanceType="LedStrip"/>
+		<BLUE 	instanceType="LedStrip"/>
+		<PURPLE instanceType="LedStrip"/>
+		<FUCHSIA instanceType="LedStrip"/>
+		
+        <Watchful  instanceType="WatchMode"/>
+        <Oblivious instanceType="WatchMode"/>  	
+
+        <Left_Bump  instanceType="Obstacle"/>
+        <Right_Bump instanceType="Obstacle"/>
+        <Front_Ping instanceType="Obstacle"/>	
+
+        <Look_Left instanceType="LookDir"/> 
+		<Look_Cntr instanceType="LookDir"/> 
+        <Look_Rght instanceType="LookDir"/> 					
+		
+			
 		<serial0 instanceType="Serial"/>
 
 		<servo0 instanceType="ServoRC"/>

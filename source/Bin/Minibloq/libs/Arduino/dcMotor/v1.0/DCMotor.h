@@ -38,7 +38,11 @@
     licenses, then RMPL applies here. You can contact us at: info_t1@multiplo.com.ar
 */
 
-#include "WProgram.h"
+#if ARDUINO >= 100
+ #include "Arduino.h"
+#else
+ #include "WProgram.h"
+#endif
 
 
 const float dcMotMaxSpeed = 100.0;
