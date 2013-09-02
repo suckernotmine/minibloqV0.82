@@ -16,6 +16,11 @@
 		<linux_amd64_lang>avrlinux/i386/v4.3.5/bin</linux_amd64_lang>
 		<linux_amd64_corePath>Arduino.v0105</linux_amd64_corePath>
 		<linux_amd64_core>mega32u4.a</linux_amd64_core>
+		<outputMainFile>main.ino</outputMainFile>
+		<resetBeforeBuild>false</resetBeforeBuild>
+		<bootBaudRate>57600</bootBaudRate>
+		<bootFindPortTries>15</bootFindPortTries>
+		<bootTimeOut>200</bootTimeOut>
 	</properties>
 	<build>
 		<cmd>
@@ -104,6 +109,21 @@
 			<s>"</s> <s>outputPath::</s><s>/main.cpp.elf"</s>
 		</cmd>
 	</build>
+	<resetInternal>
+		<icmd>
+			<setSerialLine param0="DTR"/>
+			<delay param0="10"/>
+			<clearSerialLine param0="DTR"/>
+			<delay param0="10"/>
+		</icmd>
+	</resetInternal>
+	<deploy>
+		<cmd>
+			<s>toolsPath::</s><s>/avrdude.20071012.exe -C"</s>
+			<s>toolsPath::</s><s>/avrdude.conf" -patmega32u4  -cavr109 -P</s><s>bootPortName::</s>
+			<s> -b</s><s>bootBaudRate::</s><s> -Uflash:w:"</s><s>outputPath::</s>/main.cpp.hex<s></s><s>":i</s>
+		</cmd>
+	</deploy>
 	<instances>		
 			
 		<serial0 instanceType="Serial"/>
