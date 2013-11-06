@@ -65,13 +65,12 @@
 #define _useTimer4 
 typedef enum { _timer5, _timer1, _timer3, _timer4, _Nbr_16timers } timer16_Sequence_t ;
 
-// modified 1 Sep to use timer 1 to avoid conflict with tone - mem  
 #elif defined(__AVR_ATmega32U4__)  
-//#define _useTimer3
+#define _useTimer3
 //##2011.10.09: Modified for DuinoBot and DuinoBot.Kids boards:
-#define _useTimer1 
-typedef enum { _timer3, _timer1, _Nbr_16timers } timer16_Sequence_t ;
-//typedef enum { _timer3, _Nbr_16timers } timer16_Sequence_t ;
+//#define _useTimer1 
+//typedef enum { _timer3, _timer1, _Nbr_16timers } timer16_Sequence_t ;
+typedef enum { _timer3, _Nbr_16timers } timer16_Sequence_t ;
 
 #elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
 #define _useTimer3

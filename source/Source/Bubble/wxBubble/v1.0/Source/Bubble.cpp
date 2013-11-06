@@ -11,6 +11,11 @@
 #include <windows.h>
 #endif
 
+//##:
+//#include <string>
+//#include <vector>
+
+
 //##2010.10.04: Ver que esto no dé error de runtime: Dejar este mensaje interno, aunque pasarlo a
 //inglés, por si se reportara un bug al respecto en el futuro. Al menos dejarlo hasta ver bien cómo
 //trabaja WX_DEFINE_OBJARRAY() y ver por qué en algunos compiladores, si se usa este macro sin tener
@@ -103,8 +108,8 @@ Bubble::~Bubble()
     clearExpressionPickers();
 }
 
+
 #if defined (WIN32)
-//##Ver si hago que MinibloqRun llame a ese header en vez de redefinir esta función:
 LPWSTR Bubble::cstrToWChar(LPCSTR value)
 {
     LPWSTR result = NULL;
@@ -118,6 +123,7 @@ LPWSTR Bubble::cstrToWChar(LPCSTR value)
     return result;
 }
 #endif
+
 
 wxString Bubble::bool2string(const bool value)
 {
@@ -871,7 +877,7 @@ bool Bubble::saveComponentToFile(const wxString& name, bool format)
             return false;
 
         componentFile.AddLine(wxString("\t<properties>")); //##Ver si esto queda así, o si pasa a algo tipo "MinibloqComponent"...
-        componentFile.AddLine(wxString("\t\t<blocks count=\"") + //##Un-hardcode
+        componentFile.AddLine(wxString("\t\t<blocks count=\"") +
                               (wxString("") << currentCanvas->getBlocksCount()) + wxString("\"") +
                               wxString(">")); //##
         componentFile.AddLine(wxString("\t\t</blocks>"));
@@ -1094,6 +1100,8 @@ bool Bubble::findErrorStringAndShow(const wxArrayString &value)
             isSubstringInArrayString(value, wxString("cannot")) ||
             isSubstringInArrayString(value, wxString("incorrect")) ||
             isSubstringInArrayString(value, wxString("multiple definition")) ||
+            isSubstringInArrayString(value, wxString("not found")) ||
+            isSubstringInArrayString(value, wxString("No new port")) ||
             isSubstringInArrayString(value, wxString("undefined"))
        )
     {
@@ -1145,7 +1153,7 @@ bool Bubble::verifyPortExistance()
     if (getBootPortName() != wxString("HID")) ////HID or CDC board? ##Future: unhardcode.
     {
         unsigned int times = 0;
-        while ( (BubbleHardwareManager::serialPortExists(bootPortName)) &&
+        while ( !(BubbleHardwareManager::serialPortExists(bootPortName)) &&
                 (times < getHardwareManager()->getCurrentBoardProperties()->getBootFindPortTries())
               )
         {
@@ -1153,8 +1161,13 @@ bool Bubble::verifyPortExistance()
             getNotifier()->showMessage(_(">"), false, false, *wxBLUE);
             wxMilliSleep(100);
         }
-        //##As this value was never used, if it's used check if the following return value is correct:
-        return BubbleHardwareManager::serialPortExists(bootPortName);
+        if (BubbleHardwareManager::serialPortExists(bootPortName))
+        {
+            getNotifier()->showMessage(wxString("\n") + bootPortName + _(" port found.\n"), false, false, *wxGREEN);
+            return true;
+        }
+        getNotifier()->showMessage(wxString("\n") + bootPortName + _(" port not found.\n"), false, false, *wxRED);
+        return false;
     }
     return true; //HID port.
 }
@@ -1169,17 +1182,17 @@ bool Bubble::deploy()
     if (getHardwareManager()->getCurrentBoardProperties() == NULL)
         return false;
 
-    //If the board does not uses timeouts in its bootloader, this will compile and buil in parallel with the
+    //If the board does not use timeouts in its bootloader, this will compile and build in parallel with the
     //reset process. For exmaple, like the Multiplo DuinoBot board, which uses a run button, so once
-    //it's reset, it will wait until the run button is pressed, or until the software sends a new program and
-    //to the flash and then run it from the comm port.
+    //it's reset, the board will wait until the run button is pressed, or until the software sends a new
+    //program and to the flash and then run it from the comm port.
     if (getHardwareManager()->getCurrentBoardProperties()->getResetBeforeBuild())
     {
         //First, reset the progress bar:
         //##getNotifier()->setProgressPosition(0, false, false);
         getNotifier()->clearMessage();
 
-        verifyPortExistance(); //##Return value not used by now.
+        //verifyPortExistance(); //##Return value not used by now.
         getNotifier()->showMessage(_("\nReseting the board...\n"), false, false, *wxBLUE);
         getNotifier()->deployStartedNotify();
         resetBoard();
@@ -1189,13 +1202,13 @@ bool Bubble::deploy()
     {
         if ( !(getHardwareManager()->getCurrentBoardProperties()->getResetBeforeBuild()) )
         {
-            verifyPortExistance(); //##Return value not used by now.
+            //verifyPortExistance(); //##Return value not used by now.
             getNotifier()->showMessage(_("\nReseting the board...\n"), false, false, *wxBLUE);
             getNotifier()->deployStartedNotify();
             resetBoard();
         }
 
-        verifyPortExistance(); //##Return value not used by now.
+        //verifyPortExistance(); //##Return value not used by now.
         getNotifier()->showMessage(_("\n"), false, false, *wxBLUE);
 
         wxArrayString output, errors, commands;
@@ -1307,13 +1320,28 @@ bool Bubble::runInternalCommand(const wxString& cmd)
     //supports up to 10 params:
     wxString command = cmd.BeforeFirst(';');
     wxString param0 = cmd.AfterFirst(';');
+    param0 = param0.BeforeFirst(';'); //Elimintates the last ';'.
+
+    //Shows the command in the message window:
+    getNotifier()->showMessage(wxString(">") + command + wxString(";") + param0 + wxString("\n"), false, true, *wxGREEN);
+
     if (command == wxString("delay"))
     {
         long ms = 0;
         if (param0.ToLong(&ms))
             wxMilliSleep((unsigned int)(ms));
     }
-    else if (command == wxString("setSerialLine"))
+//##Future: finish this (verifyPortExistance() seems to not be working correctly):
+//    if (command == wxString("verifyPort"))
+//    {
+//        return verifyPortExistance();
+//        //if (BubbleHardwareManager::serialPortExists(bootPortName))
+//        //    getNotifier()->showMessage(bootPortName + wxString(" port found."), false, true, *wxGREEN);
+//        //else
+//        //    getNotifier()->showMessage(bootPortName + wxString(" port not found."), false, true, *wxRED);
+//        //getNotifier()->showMessage(wxString("\n"), false, true, *wxGREEN);
+//    }
+    else if (command == wxString("setBootSerialLine"))
     {
         if (bootSerialPort.IsOpen())
         {
@@ -1329,7 +1357,7 @@ bool Bubble::runInternalCommand(const wxString& cmd)
                 bootSerialPort.SetLineState(wxSERIAL_LINESTATE_RING);
         }
     }
-    else if (command == wxString("clearSerialLine"))
+    else if (command == wxString("clearBootSerialLine"))
     {
         if (bootSerialPort.IsOpen())
         {
@@ -1345,6 +1373,96 @@ bool Bubble::runInternalCommand(const wxString& cmd)
                 bootSerialPort.ClrLineState(wxSERIAL_LINESTATE_RING);
         }
     }
+    else if (command == wxString("openBootSerialPort"))
+    {
+        bootSerialPort.Open(bootPortName.char_str());
+    }
+    else if (command == wxString("closeBootSerialPort"))
+    {
+        bootSerialPort.Close();
+    }
+    else if (command == wxString("setBootSerialBaudrate"))
+    {
+        //Very important: It seems that with the wxSerialPort class, the baudrate must be set with the
+        //open port. Doing this with the closed port has no effect:
+        if (bootSerialPort.IsOpen())
+        {
+            if (param0 == wxString("150"))
+                bootSerialPort.SetBaudRate(wxBAUD_150);
+            if (param0 == wxString("300"))
+                bootSerialPort.SetBaudRate(wxBAUD_300);
+            if (param0 == wxString("600"))
+                bootSerialPort.SetBaudRate(wxBAUD_600);
+            if (param0 == wxString("1200"))
+                bootSerialPort.SetBaudRate(wxBAUD_1200);
+            if (param0 == wxString("2400"))
+                bootSerialPort.SetBaudRate(wxBAUD_2400);
+            if (param0 == wxString("4800"))
+                bootSerialPort.SetBaudRate(wxBAUD_4800);
+            if (param0 == wxString("9600"))
+                bootSerialPort.SetBaudRate(wxBAUD_9600);
+            if (param0 == wxString("19200"))
+                bootSerialPort.SetBaudRate(wxBAUD_19200);
+            if (param0 == wxString("38400"))
+                bootSerialPort.SetBaudRate(wxBAUD_38400);
+            if (param0 == wxString("57600"))
+                bootSerialPort.SetBaudRate(wxBAUD_57600);
+            if (param0 == wxString("115200"))
+                bootSerialPort.SetBaudRate(wxBAUD_115200);
+            if (param0 == wxString("230400"))
+                bootSerialPort.SetBaudRate(wxBAUD_230400);
+            if (param0 == wxString("460800"))
+                bootSerialPort.SetBaudRate(wxBAUD_460800);
+            if (param0 == wxString("921600"))
+                bootSerialPort.SetBaudRate(wxBAUD_921600);
+        }
+    }
+    else if (command == wxString("stringWriteToBootSerial"))
+    {
+        if (bootSerialPort.IsOpen())
+        {
+            bootSerialPort.Write(param0.char_str(), param0.Len());
+        }
+    }
+    else if (command == wxString("containsStringReadFromBootSerial"))
+    {
+        if (bootSerialPort.IsOpen())
+        {
+            //This command can stop the reading of internal commands in this XML section (by now, it's
+            //all that it can do) by returning "false":
+            char buffer[256]; //Max size of param0 for this command = 255.
+            unsigned int readCount = bootSerialPort.Read(buffer, sizeof(buffer)-1);
+            if ( (readCount < sizeof(buffer)) && (readCount > 0) )
+            {
+                getNotifier()->showMessage(wxString(buffer) + wxString("\n"), false, false, *wxBLUE);
+                if (bootSerialPort.IsOpen())
+                    bootSerialPort.Close();
+                return wxString(buffer).Contains(param0);
+            }
+        }
+        return false;
+    }
+    else if (command == wxString("debug"))
+    {
+        getNotifier()->showMessage(param0 + wxString("\n"), false, false, *wxGREEN);
+    }
+//##Future: finish this:
+//    else if (command == wxString("findNewPort"))
+//    {
+//        if (getHardwareManager())
+//        {
+//            std::vector<std::string> ports;
+//            getHardwareManager()->getPorts(ports);
+//            getNotifier()->showMessage(_("Current ports: \n"), false, false, *wxWHITE);
+//            for (unsigned int i = 0; i < ports.size(); i++)
+//                getNotifier()->showMessage(wxString(ports[i]) + wxString("\n"), false, false, *wxWHITE);
+//            if (getHardwareManager()->findNewPort())
+//            {
+//                getNotifier()->showMessage(_("New port: "), false, false, *wxWHITE);
+//                getNotifier()->showMessage(getHardwareManager()->getNewPort() + wxString("\n"), false, false, *wxWHITE);
+//            }
+//        }
+//    }
 
     return true;
 }
@@ -1381,8 +1499,8 @@ bool Bubble::resetBoard()
         while (i < count)
         {
             cmd = commands[i];
-            getNotifier()->showMessage((wxString("") << i) + wxString(": ") + cmd + wxString("\n"), false, true, *wxGREEN);
-            runInternalCommand(cmd);
+            if (!runInternalCommand(cmd))
+                break;
             i++;
         }
 
@@ -1411,11 +1529,13 @@ bool Bubble::resetBoard()
 }
 
 
+//##Delete this!
+#if 0
 bool Bubble::verifyBoard()
 {
     //##Esto debe ser diferente para cada placa:
-    if (getBoardName() == wxString("DuinoBot.v1.x") || //##Un-hardcode:
-        getBoardName() == wxString("DuinoBot.Kids.v1.x") ) //##Un-hardcode:
+    if (getBoardName() == wxString("DuinoBot.v1.x") ||
+        getBoardName() == wxString("DuinoBot.Kids.v1.x") )
     {
         try
         {
@@ -1453,6 +1573,7 @@ bool Bubble::verifyBoard()
         return true;
     }
 }
+#endif
 
 
 void Bubble::linesFromArrayToBubbleEditor(const wxArrayString &strings, BubbleEditor *editor)
@@ -1808,7 +1929,9 @@ bool Bubble::generateCodeAndSaveToFile()
         //example a .ino file. In the future it's possible that this will become configurable in the backend, specially to support
         //other languajes different than C/C++:
         wxTextFile wrapperOutput;
-        if ( !wrapperOutput.Create(getOutputPath() + wxString("/") + getComponentFilesPath().AfterLast('/') + wxString(".cpp")) ) //Un-hardcode the file extension.
+        if ( !wrapperOutput.Create( getOutputPath() + wxString("/") + getComponentFilesPath().AfterLast('/') + wxString(".") +
+                                    getHardwareManager()->getCurrentBoardProperties()->getCodeFileExtension() )
+           )
             return false;
         wrapperOutput.AddLine(  getHardwareManager()->getCurrentBoardProperties()->getIncludeCodePrefix() +
                                 getComponentFilesPath().AfterLast('/') + wxString(".") +
@@ -1822,7 +1945,8 @@ bool Bubble::generateCodeAndSaveToFile()
 
         //This is the global header, to be included by other code files that need to access the board's instances and constants:
         wxTextFile mbqGlogalsHeader;
-        wxString mbqGlogalsHeaderName = getComponentFilesPath() + wxString("/mbq.h"); //##Unhardcode file extenstion.
+        wxString mbqGlogalsHeaderName = getComponentFilesPath() + wxString("/mbq.") +
+                                        getHardwareManager()->getCurrentBoardProperties()->getHeaderFileExtension();
         wxRemoveFile(mbqGlogalsHeaderName);
         if ( !mbqGlogalsHeader.Create(mbqGlogalsHeaderName) )
             return false;
@@ -1838,11 +1962,12 @@ bool Bubble::generateCodeAndSaveToFile()
 
         //Creates the initBoard file:
         wxTextFile initBoardFile;
-        wxString initBoardFileName = getComponentFilesPath() + wxString("/initBoard.cpp"); //##Unhardcode file extension.
+        wxString initBoardFileName =    getComponentFilesPath() + wxString("/initBoard.") +
+                                        getHardwareManager()->getCurrentBoardProperties()->getCodeFileExtension();
         wxRemoveFile(initBoardFileName);
         if ( !initBoardFile.Create(initBoardFileName) )
             return false;
-        initBoardFile.AddLine(wxString("#include <mbq.h>")); //Unhardcode.
+        initBoardFile.AddLine(getHardwareManager()->getCurrentBoardProperties()->getInitBoardHeader());
         initBoardFile.AddLine(wxString(""));
         initBoardFile.AddLine(getHardwareManager()->getCurrentBoardProperties()->getInstancesCodeList());
         initBoardFile.AddLine(wxString(""));

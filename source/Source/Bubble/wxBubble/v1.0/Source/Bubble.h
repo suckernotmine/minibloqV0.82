@@ -99,6 +99,8 @@ class BubbleBoardProperties
         wxString imgThumb;
         wxString portType;
         wxString lang;
+        wxString uploader;
+        wxString uploaderCmd0;
         wxString corePath;
         wxString core;
         wxString outputMainFileExtension;
@@ -106,6 +108,8 @@ class BubbleBoardProperties
         unsigned int bootBaudRate;
         unsigned int bootFindPortTries;
         unsigned int bootTimeOut;
+        wxString headerFileExtension;
+        wxString codeFileExtension;
         wxString includeCodePrefix;
         wxString includeCodePostfix;
         wxString includeCodeInstancePrefix;
@@ -113,6 +117,7 @@ class BubbleBoardProperties
         wxString includeFinalCode;
         wxString includeBuildPrefix;
         wxString includeBuildPostfix;
+        wxString initBoardHeader;
         wxString initBoardPrefix;
         wxString initBoardPostfix;
         wxString commentBegin;
@@ -127,6 +132,12 @@ class BubbleBoardProperties
         wxString includesBuildList;
         wxString arduinoVersion; //This is specific to Arduino-compatible hardware, but needed by now.
         wxString objectExtension;
+        wxString boardDefine;
+        wxString arduinoVariant;
+        wxString usbVid;
+        wxString usbPid;
+        wxString usbManufacturer;
+        wxString usbProduct;
         wxArrayString relCommands;
 
     public:
@@ -138,6 +149,8 @@ class BubbleBoardProperties
                                     imgThumb(wxString("")),
                                     portType(wxString("serial")),
                                     lang(wxString("")),
+                                    uploader(wxString("")),
+                                    uploaderCmd0(wxString("")),
                                     corePath(wxString("")),
                                     core(wxString("")),
                                     outputMainFileExtension(wxString("ino")), //##Arduino compatible file by default?
@@ -145,6 +158,8 @@ class BubbleBoardProperties
                                     bootBaudRate(115200),
                                     bootFindPortTries(5),
                                     bootTimeOut(200),
+                                    headerFileExtension(wxString("")),
+                                    codeFileExtension(wxString("")),
                                     includeCodePrefix(wxString("")),
                                     includeCodePostfix(wxString("")),
                                     includeCodeInstancePrefix(wxString("")),
@@ -152,6 +167,7 @@ class BubbleBoardProperties
                                     includeFinalCode(wxString("")),
                                     includeBuildPrefix(wxString("")),
                                     includeBuildPostfix(wxString("")),
+                                    initBoardHeader(wxString("")),
                                     initBoardPrefix(wxString("")),
                                     initBoardPostfix(wxString("")),
                                     commentBegin(wxString("")),
@@ -165,7 +181,13 @@ class BubbleBoardProperties
                                     initBoardCode(wxString("")),
                                     includesBuildList(wxString("")),
                                     arduinoVersion(wxString("")),
-                                    objectExtension(wxString(""))
+                                    objectExtension(wxString("")),
+                                    boardDefine(wxString("")),
+                                    arduinoVariant(wxString("")),
+                                    usbVid(wxString("")),
+                                    usbPid(wxString("")),
+                                    usbManufacturer(wxString("")),
+                                    usbProduct(wxString(""))
         {
             relCommands.Clear(); //Not necessary, but just in case.
         }
@@ -187,6 +209,8 @@ class BubbleBoardProperties
                 setClockFreq(boardProperties->getClockFreq());
                 setImgThumb(boardProperties->getImgThumb());
                 setLang(boardProperties->getLang());
+                setUploader(boardProperties->getUploader());
+                setUploaderCmd0(boardProperties->getUploaderCmd0());
                 setCorePath(boardProperties->getCorePath());
                 setCore(boardProperties->getCore());
                 setOutputMainFileExtension(boardProperties->getOutputMainFileExtension());
@@ -194,6 +218,8 @@ class BubbleBoardProperties
                 setBootBaudRate(boardProperties->getBootBaudRate());
                 setBootFindPortTries(boardProperties->getBootFindPortTries());
                 setBootTimeOut(boardProperties->getBootTimeOut());
+                setHeaderFileExtension(boardProperties->getHeaderFileExtension()),
+                setCodeFileExtension(boardProperties->getCodeFileExtension()),
                 setIncludeCodePrefix(boardProperties->getIncludeCodePrefix());
                 setIncludeCodePostfix(boardProperties->getIncludeCodePostfix());
                 setIncludeCodeInstancePrefix(boardProperties->getIncludeCodeInstancePrefix());
@@ -201,6 +227,7 @@ class BubbleBoardProperties
                 setIncludeFinalCode(boardProperties->getIncludeFinalCode());
                 setIncludeBuildPrefix(boardProperties->getIncludeBuildPrefix());
                 setIncludeBuildPostfix(boardProperties->getIncludeBuildPostfix());
+                setInitBoardHeader(boardProperties->getInitBoardHeader());
                 setInitBoardPrefix(boardProperties->getInitBoardPrefix());
                 setInitBoardPostfix(boardProperties->getInitBoardPostfix());
                 setCommentBegin(boardProperties->getCommentBegin());
@@ -215,6 +242,12 @@ class BubbleBoardProperties
                 setIncludesBuildList(boardProperties->getIncludesBuildList());
                 setArduinoVersion(boardProperties->getArduinoVersion());
                 setObjectExtension(boardProperties->getObjectExtension());
+                setBoardDefine(boardProperties->getBoardDefine());
+                setArduinoVariant(boardProperties->getArduinoVariant());
+                setUsbVid(boardProperties->getUsbVid());
+                setUsbPid(boardProperties->getUsbPid());
+                setUsbManufacturer(boardProperties->getUsbManufacturer());
+                setUsbProduct(boardProperties->getUsbProduct());
                 //relCommands = *(boardProperties->getRelCommands());
                 unsigned int i = 0;
                 while (i < boardProperties->getRelCommandsCount())
@@ -250,6 +283,12 @@ class BubbleBoardProperties
         inline void setLang(const wxString& value) { lang = value; }
         inline const wxString &getLang() const { return lang; }
 
+        inline void setUploader(const wxString& value) { uploader = value; }
+        inline const wxString &getUploader() const { return uploader; }
+
+        inline void setUploaderCmd0(const wxString& value) { uploaderCmd0 = value; }
+        inline const wxString &getUploaderCmd0() const { return uploaderCmd0; }
+
         inline void setCorePath(const wxString& value) { corePath = value; }
         inline const wxString &getCorePath() const { return corePath; }
 
@@ -271,6 +310,12 @@ class BubbleBoardProperties
         inline void setBootTimeOut(const unsigned int value) { bootTimeOut = value; }
         inline const unsigned int getBootTimeOut() const { return bootTimeOut; }
 
+        inline void setHeaderFileExtension(const wxString& value) { headerFileExtension = value; }
+        inline const wxString & getHeaderFileExtension() const { return headerFileExtension; }
+
+        inline void setCodeFileExtension(const wxString& value) { codeFileExtension = value; }
+        inline const wxString & getCodeFileExtension() const { return codeFileExtension; }
+
         inline void setIncludeCodePrefix(const wxString& value) { includeCodePrefix = value; }
         inline const wxString &getIncludeCodePrefix() const { return includeCodePrefix; }
 
@@ -291,6 +336,9 @@ class BubbleBoardProperties
 
         inline void setIncludeBuildPostfix(const wxString& value) { includeBuildPostfix = value; }
         inline const wxString &getIncludeBuildPostfix() const { return includeBuildPostfix; }
+
+        inline void setInitBoardHeader(const wxString& value) { initBoardHeader = value; }
+        inline const wxString &getInitBoardHeader() const { return initBoardHeader; }
 
         inline void setInitBoardPrefix(const wxString& value) { initBoardPrefix = value; }
         inline const wxString &getInitBoardPrefix() const { return initBoardPrefix; }
@@ -333,6 +381,24 @@ class BubbleBoardProperties
 
         inline void setObjectExtension(const wxString& value) { objectExtension = value; }
         inline const wxString &getObjectExtension() const { return objectExtension; }
+
+        inline void setBoardDefine(const wxString& value) { boardDefine = value; }
+        inline const wxString &getBoardDefine() const { return boardDefine; }
+
+        inline void setArduinoVariant(const wxString& value) { arduinoVariant = value; }
+        inline const wxString &getArduinoVariant() const { return arduinoVariant; }
+
+        inline void setUsbVid(const wxString& value) { usbVid = value; }
+        inline const wxString &getUsbVid() const { return usbVid; }
+
+        inline void setUsbPid(const wxString& value) { usbPid = value; }
+        inline const wxString &getUsbPid() const { return usbPid; }
+
+        inline void setUsbManufacturer(const wxString& value) { usbManufacturer = value; }
+        inline const wxString &getUsbManufacturer() const { return usbManufacturer; }
+
+        inline void setUsbProduct(const wxString& value) { usbProduct = value; }
+        inline const wxString &getUsbProduct() const { return usbProduct; }
 
         inline void clearRelCommands() { return relCommands.Clear(); };
         inline unsigned int getRelCommandsCount() const { return relCommands.GetCount(); };
@@ -646,7 +712,6 @@ class Bubble : public IBubbleFileIO
         bool build();
         bool runInternalCommand(const wxString& cmd);
         bool resetBoard();
-        bool verifyBoard();
 
         inline bool getSimplifyCode() const { return simplifyCode; }
         inline void setSimplifyCode(bool value) { simplifyCode =  value; }

@@ -22,23 +22,28 @@
 		<bootBaudRate>19200</bootBaudRate>
 		<bootFindPortTries>15</bootFindPortTries>
 		<bootTimeOut>200</bootTimeOut>
+		<headerFileExtension>h</headerFileExtension>
+		<codeFileExtension>cpp</codeFileExtension>
 		<includeCodePrefix>#include &lt;</includeCodePrefix>
 		<includeCodePostfix>&gt;</includeCodePostfix>
 		<includeInitCode>#ifndef mbq_h&#10;#define mbq_h&#10;&#10;</includeInitCode>
 		<includeFinalCode>#endif</includeFinalCode>
 		<includeBuildPrefix> -I"</includeBuildPrefix>
 		<includeBuildPostfix>"</includeBuildPostfix>
+		<initBoardHeader>#include &lt;mbq.h&gt;&#10;</initBoardHeader>
 		<initBoardPrefix>void initBoard()&#10;{</initBoardPrefix>
 		<initBoardPostfix>}</initBoardPostfix>
 		<commentBegin>//</commentBegin>
 		<commentEnd></commentEnd>
 		<arduinoVersion>22</arduinoVersion>
 		<objectExtension>o</objectExtension>
+		<boardDefine>ARDUINO_AVR_DUEMILANOVE</boardDefine>
+		<arduinoVariant>standard</arduinoVariant>
     </properties>
 	<includeFiles>
 		<include><s>WProgram.h</s></include>
 		<include><s>stdlib.h</s></include>
-		<include><s>minibloq.h</s></include>
+		<include><s>miniBloq.h</s></include>
 		<include><s>board.h</s></include>
 	</includeFiles>
 	<initBoardCode>
@@ -68,14 +73,20 @@
 	<build>
 		<cmd>
 			<s>toolsPath::</s>
-			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=</s><s>cpu::</s>
-			<s> -DF_CPU=</s><s>clockFreq::</s><s> -DARDUINO=</s><s>arduinoVersion::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD -mmcu=</s><s>cpu::</s>
+			<s> -DF_CPU=</s><s>clockFreq::</s>
+			<s> -DARDUINO=</s><s>arduinoVersion::</s>
+			<s> -D=</s><s>boardDefine::</s>
+			<s> -DARDUINO_ARCH_AVR</s>
 			<s> -I"</s><s>toolsPath::</s>
 			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>corePath::</s><s>/avr-libc</s>
+			<s>" -I"</s><s>corePath::</s><s>/variants/</s><s>arduinoVariant::</s>			
 			<s>" -I"</s><s>boardPath::</s><s>/lib</s>
 			<s>" -I"</s><s>componentFilesPath::</s>
 			<s>" -I"</s><s>outputPath::</s>
-			<s>" -I"</s><s>libsPath::</s><s>/Arduino/miniBloq" </s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/miniBloq/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/PingIRReceiver/v1.0" </s>
 
 			<s>includesBuildList::</s>
 			
@@ -83,14 +94,20 @@
 		</cmd>
 		<cmd>
 			<s>toolsPath::</s>
-			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -mmcu=</s><s>cpu::</s>
-			<s> -DF_CPU=</s><s>clockFreq::</s><s> -DARDUINO=</s><s>arduinoVersion::</s>
+			<s>/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD -mmcu=</s><s>cpu::</s>
+			<s> -DF_CPU=</s><s>clockFreq::</s>
+			<s> -DARDUINO=</s><s>arduinoVersion::</s>
+			<s> -D=</s><s>boardDefine::</s>
+			<s> -DARDUINO_ARCH_AVR</s>			
 			<s> -I"</s><s>toolsPath::</s>
 			<s>" -I"</s><s>corePath::</s>
+			<s>" -I"</s><s>corePath::</s><s>/avr-libc</s>
+			<s>" -I"</s><s>corePath::</s><s>/variants/</s><s>arduinoVariant::</s>			
 			<s>" -I"</s><s>boardPath::</s><s>/lib</s>
 			<s>" -I"</s><s>componentFilesPath::</s>
 			<s>" -I"</s><s>outputPath::</s>
-			<s>" -I"</s><s>libsPath::</s><s>/Arduino/miniBloq" </s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/miniBloq/v1.0</s>
+			<s>" -I"</s><s>libsPath::</s><s>/Arduino/PingIRReceiver/v1.0" </s>
 
 			<s>includesBuildList::</s>
 			
@@ -98,7 +115,7 @@
 		</cmd>
 		<cmd>
 			<s>toolsPath::</s>
-			<s>/avr-gcc -Os -Wl,--gc-sections -mmcu=atmega168 -o</s>
+			<s>/avr-gcc -Os -Wl,--gc-sections -mmcu=</s><s>cpu::</s><s> -o</s>
 			<s>"</s><s>outputPath::</s><s>/main.cpp.elf" </s>
 			<s>outputObjectsList::</s>
 			<s> "</s><s>outputPath::</s><s>/</s><s>initBoard.cpp.o"</s>
@@ -110,31 +127,31 @@
 			<s>toolsPath::</s>
 			<s>/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 </s>
 			<s>"</s><s>outputPath::</s><s>/main.cpp.elf" "</s>
-			<s>"</s><s>outputPath::</s><s>/main.cpp.epp"</s>
+			<s>outputPath::</s><s>/main.cpp.epp"</s>
 		</cmd>
 		<cmd>
 			<s>toolsPath::</s>
 			<s>/avr-objcopy -O ihex -R .eeprom </s>
 			<s>"</s><s>outputPath::</s><s>/main.cpp.elf" "</s>
-			<s>"</s><s>outputPath::</s><s>/main.cpp.hex"</s>
+			<s>outputPath::</s><s>/main.cpp.hex"</s>
 		</cmd>
 		<cmd>
-			<s>toolsPath::</s><s>/avr-size --mcu=atmega168 --format=avr </s>
+			<s>toolsPath::</s><s>/avr-size --mcu=</s><s>cpu::</s><s> --format=avr </s>
 			<s>"</s><s>outputPath::</s><s>/main.cpp.elf"</s>
 		</cmd>
 	</build>
 	<resetInternal>
 		<icmd>
-			<setSerialLine param0="DTR"/>
+			<setBootSerialLine param0="DTR"/>
 			<delay param0="10"/>
-			<clearSerialLine param0="DTR"/>
+			<clearBootSerialLine param0="DTR"/>
 			<delay param0="10"/>
 		</icmd>
 	</resetInternal>
 	<deploy>
 		<cmd>
 			<s>toolsPath::</s><s>/avrdude.20071012.exe -C"</s>
-			<s>toolsPath::</s><s>/avrdude.conf" -patmega328p -cstk500v1 -P</s><s>bootPortName::</s>
+			<s>toolsPath::</s><s>/avrdude.conf" -p</s><s>cpu::</s><s> -cstk500v1 -P</s><s>bootPortName::</s>
 			<s> -b</s><s>bootBaudRate::</s><s> -Uflash:w:"</s><s>outputPath::</s><s>/main.cpp.hex</s><s>":i</s>
 		</cmd>
 	</deploy>

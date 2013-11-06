@@ -321,6 +321,10 @@ wxString BubbleXML::getInternalVariableValue(const wxString& variableName, const
         return bubble->getComponentsRepositoryPath();
     if (variableName == "toolsPath::")
         return bubble->getComponentsRepositoryPath() + wxString("/lang/") + bubble->getHardwareManager()->getCurrentBoardProperties()->getLang();
+    if (variableName == "uploader::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getUploader();
+    if (variableName == "uploaderCmd_0::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getUploaderCmd0();
     if (variableName == "libsPath::")
         return bubble->getComponentsRepositoryPath() + wxString("/libs");
     if (variableName == "corePath::")
@@ -355,6 +359,10 @@ wxString BubbleXML::getInternalVariableValue(const wxString& variableName, const
         return (wxString("") << bubble->getHardwareManager()->getCurrentBoardProperties()->getBootBaudRate());
     if (variableName == "includeCodePrefix::")
         return bubble->getHardwareManager()->getCurrentBoardProperties()->getIncludeCodePrefix();
+    if (variableName == "headerFileExtension::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getHeaderFileExtension();
+    if (variableName == "codeFileExtension::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getCodeFileExtension();
     if (variableName == "includeCodePostfix::")
         return bubble->getHardwareManager()->getCurrentBoardProperties()->getIncludeCodePostfix();
     if (variableName == "includeBuildPrefix::")
@@ -365,6 +373,19 @@ wxString BubbleXML::getInternalVariableValue(const wxString& variableName, const
         return bubble->getHardwareManager()->getCurrentBoardProperties()->getArduinoVersion();
     if (variableName == "objectExtension::")
         return bubble->getHardwareManager()->getCurrentBoardProperties()->getObjectExtension();
+    if (variableName == "boardDefine::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getBoardDefine();
+    if (variableName == "arduinoVariant::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getArduinoVariant();
+
+    if (variableName == "usbVid::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getUsbVid();
+    if (variableName == "usbPid::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getUsbPid();
+    if (variableName == "usbManufacturer::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getUsbManufacturer();
+    if (variableName == "usbProduct::")
+        return bubble->getHardwareManager()->getCurrentBoardProperties()->getUsbProduct();
 
     if (variableName == "cpu::")
         return bubble->getHardwareManager()->getCurrentBoardProperties()->getCpu();
@@ -379,10 +400,11 @@ wxString BubbleXML::getInternalVariableValue(const wxString& variableName, const
         return bubble->getHardwareManager()->getCurrentBoardProperties()->getInstancesCodeList();
 
     if (variableName == "outputObjectsList::")
-    {
         return bubble->getOutputObjectsList(bubble->getHardwareManager()->getCurrentBoardProperties()->getObjectExtension());
-    }
 
+//##Future: finish this:
+//    if (variableName == "newPortName::")
+//        return bubble->getHardwareManager()->getNewPort();
 
     if (fileName != wxString(""))
     {
@@ -1679,6 +1701,14 @@ BubbleBoardProperties *BubbleXML::loadBoardProperties(const wxString &fullBoardF
                 {
                     boardInfo->setLang(child->GetNodeContent());
                 }
+                else if (child->GetName() == bubble->getHost() + wxString("_uploader"))
+                {
+                    boardInfo->setUploader(child->GetNodeContent());
+                }
+                else if (child->GetName() == bubble->getHost() + wxString("_uploaderCmd_0"))
+                {
+                    boardInfo->setUploaderCmd0(child->GetNodeContent());
+                }
                 else if (child->GetName() == bubble->getHost() + wxString("_corePath"))
                 {
                     boardInfo->setCorePath(child->GetNodeContent());
@@ -1716,6 +1746,14 @@ BubbleBoardProperties *BubbleXML::loadBoardProperties(const wxString &fullBoardF
                     if (returnStringValue.ToDouble(&returnNumericValue))
                         boardInfo->setBootTimeOut((unsigned int)returnNumericValue);
                 }
+                else if (child->GetName() == "headerFileExtension")
+                {
+                    boardInfo->setHeaderFileExtension(child->GetNodeContent());
+                }
+                else if (child->GetName() == "codeFileExtension")
+                {
+                    boardInfo->setCodeFileExtension(child->GetNodeContent());
+                }
                 else if (child->GetName() == "includeCodePrefix")
                 {
                     boardInfo->setIncludeCodePrefix(child->GetNodeContent());
@@ -1744,6 +1782,10 @@ BubbleBoardProperties *BubbleXML::loadBoardProperties(const wxString &fullBoardF
                 {
                     boardInfo->setIncludeBuildPostfix(child->GetNodeContent());
                 }
+                else if (child->GetName() == "initBoardHeader")
+                {
+                    boardInfo->setInitBoardHeader(child->GetNodeContent());
+                }
                 else if (child->GetName() == "initBoardPrefix")
                 {
                     boardInfo->setInitBoardPrefix(child->GetNodeContent());
@@ -1768,6 +1810,34 @@ BubbleBoardProperties *BubbleXML::loadBoardProperties(const wxString &fullBoardF
                 {
                     boardInfo->setObjectExtension(child->GetNodeContent());
                 }
+                else if (child->GetName() == "boardDefine")
+                {
+                    boardInfo->setBoardDefine(child->GetNodeContent());
+                }
+                else if (child->GetName() == "arduinoVariant")
+                {
+                    boardInfo->setArduinoVariant(child->GetNodeContent());
+                    //##Debug:
+//                    wxMessageDialog dialog0(bubble->getParent(), boardInfo->getArduinoVariant(), boardInfo->getName()); //##Debug.
+//                    dialog0.ShowModal(); //##Debug.
+                }
+                else if (child->GetName() == "usbVid")
+                {
+                    boardInfo->setUsbVid(child->GetNodeContent());
+                }
+                else if (child->GetName() == "usbPid")
+                {
+                    boardInfo->setUsbPid(child->GetNodeContent());
+                }
+                else if (child->GetName() == "usbManufacturer")
+                {
+                    boardInfo->setUsbManufacturer(child->GetNodeContent());
+                }
+                else if (child->GetName() == "usbProduct")
+                {
+                    boardInfo->setUsbProduct(child->GetNodeContent());
+                }
+
                 child = child->GetNext();
             }
         }
