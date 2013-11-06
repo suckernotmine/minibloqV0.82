@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rel xmlns="http://rel.namespaces.minibloq.org" xmlns:minibloq="http://minibloq.org" MinibloqVersion="0.82.Beta">
+	<includePaths>
+		<include><s>libsPath::</s><s>/Arduino/LedStrip/v1.0</s></include>
+	</includePaths>
+	<includeFiles>
+		<include><s>LedStrip.h</s></include>
+	    <include><s>LedStripConfig.h</s></include>
+	</includeFiles>
+	<instancesHeader>
+	</instancesHeader>	
+	<instancesCode>
+	</instancesCode>
+	<instances>
+	</instances>
+	<initBoardCode>
+	</initBoardCode>
+	<build>
+
+	</build>
+</rel>
